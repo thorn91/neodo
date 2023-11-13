@@ -1,0 +1,34 @@
+version: "3"
+
+services:
+  rust-app:
+    image: rust:latest
+    volumes:
+      - ./:/app
+      - ./db:/app/db
+    working_dir: /app
+    command: cargo run  
+    # command: cargo run
+    env_file:
+      - ./.env
+  #   postgres:
+  #     image: postgres:latest
+  #     container_name: postgres
+  #     ports:
+  #       - "5432:5432"
+  #     volumes:
+  #       - progresDB:/var/lib/postgresql/data
+  #     env_file:
+  #       - ./.env
+
+  # redis:
+  #   container_name: my-redis-container
+  #   image: redis:latest
+  #   volumes:
+  #     - redis-data:/data
+  #   ports:
+  #     - "6379:6379"
+  #   restart: always
+
+  # volumes:
+  #   progresDB:
