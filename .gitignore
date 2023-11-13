@@ -6,5 +6,8 @@
 # Compiled
 target/
 
+# Dev
+db/
+
 # Actual Env File
 .env
