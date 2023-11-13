@@ -1,0 +1,10 @@
+# Editor
+.vscode/
+.idea/
+.sqlx/
+
+# Compiled
+/target
+
+# Actual Env File
+.env
