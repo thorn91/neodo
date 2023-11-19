@@ -9,3 +9,8 @@ impl UserService {
         Ok(users)
     }
 }
+
+#[derive(Debug)]
+enum UserServiceError {
+    NotFound,
+}
