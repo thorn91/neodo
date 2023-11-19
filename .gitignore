@@ -1,10 +1,12 @@
 # Editor
-.vscode/
-.idea/
 .sqlx/
 
-# Compiled
+# OS
+.DS_Store
+
+# Rust
 target/
+.cargo/
 
 # Dev
 db/

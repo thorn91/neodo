@@ -1,3 +1,6 @@
+use sea_orm::{DbConn, Database, DbErr};
+use dotenv::dotenv;
+
 #[derive(Debug, Clone)]
 pub struct Config {
     pub database_url: String,
@@ -17,6 +20,7 @@ impl Config {
         let jwt_secret = std::env::var(JWT_SECRET).expect("JWT_SECRET must be set");
         let jwt_expires_in = std::env::var(JWT_EXPIRY_TIME_MINS).expect("JWT_EXPIRED_IN must be set");
         let jwt_maxage = std::env::var(JWT_MAXAGE).expect("JWT_MAXAGE must be set");
+        
         Config {
             database_url,
             jwt_secret,
@@ -24,4 +28,14 @@ impl Config {
             jwt_maxage: jwt_maxage.parse::<i32>().unwrap(),
         }
     }
+}
+
+pub async fn get_db_conn() -> Result<DbConn, DbErr> {
+    dotenv().ok();
+
+    let config = Config::init();
+    let db_url = config.database_url;
+    let db = Database::connect(db_url).await?;
+
+    Ok(db)
 }
