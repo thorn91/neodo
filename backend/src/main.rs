@@ -1,8 +1,10 @@
 use axum::{
+    extract::State,
     response::{Html, IntoResponse},
     routing::get,
-    Json, Router, Server, http::header::SEC_WEBSOCKET_ACCEPT,
+    Json, Router, Server,
 };
+use config::config::AppState;
 use error::Result;
 #[allow(unused_imports)]
 use sea_orm::{Database, DbErr};
@@ -38,7 +40,9 @@ async fn main() -> Result<()> {
     Ok(())
 }
 
-async fn health_check() -> Result<Json<Value>> {
+async fn health_check(State(state): State<AppState>) -> Result<Json<Value>> {
+    println!("{}", state.config.database_host);
+
     let body = Json(json!({
         "result": {
             "success": true

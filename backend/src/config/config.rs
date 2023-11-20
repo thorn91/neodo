@@ -1,4 +1,4 @@
-use std::{net::SocketAddr, env};
+use std::{env, net::SocketAddr};
 
 use dotenv::dotenv;
 use migration::{Migrator, MigratorTrait};
@@ -48,7 +48,6 @@ const JWT_EXPIRY_TIME_MINS: &str = "JWT_EXPIRY_TIME_MINS";
 const JWT_MAXAGE: &str = "JWT_MAXAGE";
 
 impl AppConfig {
-
     pub fn init() -> AppConfig {
         dotenv().ok();
 
@@ -108,13 +107,12 @@ impl AppConfig {
             jwt_maxage: jwt_maxage.parse::<i32>().unwrap(),
         }
     }
-
 }
 
-pub async fn get_app_state() -> Arc<AppState> {
+pub async fn get_app_state() -> AppState {
     let config = AppConfig::init();
-    let db = get_db_pool(&config).await.unwrap();
-    Arc::new(AppState { config, db })
+    let db: DatabaseConnection = get_db_pool(&config).await.unwrap();
+    AppState { config, db }
 }
 
 fn get_socket_address(address: String, port: String) -> SocketAddr {
