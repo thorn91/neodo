@@ -50,36 +50,36 @@ impl AppConfig {
             .unwrap();
 
         let host_addr = std::env::var(HOST_ADDR)
-            .map_err(|e| AppError::InvalidSetup("HOST_ADDR must be set.".to_owned()))
+            .map_err(|_| AppError::InvalidSetup("HOST_ADDR must be set.".to_owned()))
             .unwrap();
         let host_port = std::env::var(HOST_PORT)
-            .map_err(|e| AppError::InvalidSetup("HOST_PORT must be set.".to_owned()))
+            .map_err(|_| AppError::InvalidSetup("HOST_PORT must be set.".to_owned()))
             .unwrap();
 
         let database_host = std::env::var(POSTGRES_HOSTNAME)
-            .map_err(|e| AppError::InvalidSetup("POSTGRES_HOSTNAME must be set.".to_owned()))
+            .map_err(|_| AppError::InvalidSetup("POSTGRES_HOSTNAME must be set.".to_owned()))
             .unwrap();
         let database_user = std::env::var(POSTGRES_USER)
-            .map_err(|e| AppError::InvalidSetup("POSTGRES_USER must be set.".to_owned()))
+            .map_err(|_| AppError::InvalidSetup("POSTGRES_USER must be set.".to_owned()))
             .unwrap();
         let database_password = std::env::var(POSTGRES_PW)
-            .map_err(|e| AppError::InvalidSetup("POSTGRES_PW must be set.".to_owned()))
+            .map_err(|_| AppError::InvalidSetup("POSTGRES_PW must be set.".to_owned()))
             .unwrap();
         let database_db = std::env::var(POSTGRES_DB)
-            .map_err(|e| AppError::InvalidSetup("POSTGRES_DB must be set.".to_owned()))
+            .map_err(|_| AppError::InvalidSetup("POSTGRES_DB must be set.".to_owned()))
             .unwrap();
         let database_port = std::env::var(POSTGRES_PORT)
-            .map_err(|e| AppError::InvalidSetup("POSTGRES_PORT must be set.".to_owned()))
+            .map_err(|_| AppError::InvalidSetup("POSTGRES_PORT must be set.".to_owned()))
             .unwrap();
 
         let jwt_secret = std::env::var(JWT_SECRET)
-            .map_err(|e| AppError::InvalidSetup("JWT_SECRET must be set.".to_owned()))
+            .map_err(|_| AppError::InvalidSetup("JWT_SECRET must be set.".to_owned()))
             .unwrap();
         let jwt_expires_in = std::env::var(JWT_EXPIRY_TIME_MINS)
-            .map_err(|e| AppError::InvalidSetup("JWT_EXPIRY_TIME_MINS must be set.".to_owned()))
+            .map_err(|_| AppError::InvalidSetup("JWT_EXPIRY_TIME_MINS must be set.".to_owned()))
             .unwrap();
         let jwt_maxage = std::env::var(JWT_MAXAGE)
-            .map_err(|e| AppError::InvalidSetup("JWT_MAXAGE must be set.".to_owned()))
+            .map_err(|_| AppError::InvalidSetup("JWT_MAXAGE must be set.".to_owned()))
             .unwrap();
 
         let socket_address = get_socket_address(host_addr, host_port);
