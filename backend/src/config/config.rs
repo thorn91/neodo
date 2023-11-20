@@ -6,6 +6,8 @@ use sea_orm::{ConnectOptions, DatabaseConnection};
 #[allow(unused_imports)]
 use sea_orm::{Database, DbConn, DbErr};
 
+use crate::error::AppError;
+
 #[derive(Debug, Clone)]
 pub struct AppConfig {
     pub is_prod: bool,
@@ -44,22 +46,41 @@ impl AppConfig {
 
         let is_prod = std::env::var(IS_PROD)
             .map(|x| x == "true")
-            .expect("IS_PROD must be set");
+            .map_err(|_| AppError::InvalidSetup("IS_PROD must be set.".to_owned()))
+            .unwrap();
 
-        let host_addr = std::env::var(HOST_ADDR).expect("HOST_ADDR must be set");
-        let host_port = std::env::var(HOST_PORT).expect("HOST_PORT must be set");
+        let host_addr = std::env::var(HOST_ADDR)
+            .map_err(|e| AppError::InvalidSetup("HOST_ADDR must be set.".to_owned()))
+            .unwrap();
+        let host_port = std::env::var(HOST_PORT)
+            .map_err(|e| AppError::InvalidSetup("HOST_PORT must be set.".to_owned()))
+            .unwrap();
 
-        let database_host =
-            std::env::var(POSTGRES_HOSTNAME).expect("POSTGRES_HOSTNAME must be set");
-        let database_user = std::env::var(POSTGRES_USER).expect("POSTGRES_USER must be set");
-        let database_password = std::env::var(POSTGRES_PW).expect("POSTGRES_PW must be set");
-        let database_db = std::env::var(POSTGRES_DB).expect("POSTGRES_DB must be set");
-        let database_port = std::env::var(POSTGRES_PORT).expect("POSTGRES_PORT must be set");
+        let database_host = std::env::var(POSTGRES_HOSTNAME)
+            .map_err(|e| AppError::InvalidSetup("POSTGRES_HOSTNAME must be set.".to_owned()))
+            .unwrap();
+        let database_user = std::env::var(POSTGRES_USER)
+            .map_err(|e| AppError::InvalidSetup("POSTGRES_USER must be set.".to_owned()))
+            .unwrap();
+        let database_password = std::env::var(POSTGRES_PW)
+            .map_err(|e| AppError::InvalidSetup("POSTGRES_PW must be set.".to_owned()))
+            .unwrap();
+        let database_db = std::env::var(POSTGRES_DB)
+            .map_err(|e| AppError::InvalidSetup("POSTGRES_DB must be set.".to_owned()))
+            .unwrap();
+        let database_port = std::env::var(POSTGRES_PORT)
+            .map_err(|e| AppError::InvalidSetup("POSTGRES_PORT must be set.".to_owned()))
+            .unwrap();
 
-        let jwt_secret = std::env::var(JWT_SECRET).expect("JWT_SECRET must be set");
-        let jwt_expires_in =
-            std::env::var(JWT_EXPIRY_TIME_MINS).expect("JWT_EXPIRED_IN must be set");
-        let jwt_maxage = std::env::var(JWT_MAXAGE).expect("JWT_MAXAGE must be set");
+        let jwt_secret = std::env::var(JWT_SECRET)
+            .map_err(|e| AppError::InvalidSetup("JWT_SECRET must be set.".to_owned()))
+            .unwrap();
+        let jwt_expires_in = std::env::var(JWT_EXPIRY_TIME_MINS)
+            .map_err(|e| AppError::InvalidSetup("JWT_EXPIRY_TIME_MINS must be set.".to_owned()))
+            .unwrap();
+        let jwt_maxage = std::env::var(JWT_MAXAGE)
+            .map_err(|e| AppError::InvalidSetup("JWT_MAXAGE must be set.".to_owned()))
+            .unwrap();
 
         let socket_address = get_socket_address(host_addr, host_port);
 
@@ -83,7 +104,8 @@ impl AppConfig {
 
 fn get_socket_address(address: String, port: String) -> SocketAddr {
     let addr = format!("{}:{}", address, port);
-    addr.parse::<SocketAddr>().expect("Could not create socket address")
+    addr.parse::<SocketAddr>()
+        .expect("Could not create socket address")
 }
 
 pub async fn get_db_pool(config: &AppConfig) -> Result<DatabaseConnection, DbErr> {

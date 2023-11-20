@@ -6,6 +6,7 @@ use crate::config::config::{get_db_pool, run_migrations, AppConfig};
 
 mod api;
 mod config;
+mod error;
 
 #[tokio::main]
 async fn main() -> Result<(), DbErr> {
