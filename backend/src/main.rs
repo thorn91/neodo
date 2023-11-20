@@ -1,5 +1,4 @@
 use axum::{
-    extract::Query,
     response::{Html, IntoResponse},
     routing::get,
     Json, Router, Server,
@@ -13,6 +12,7 @@ use crate::config::config::{get_app_state, run_migrations};
 
 mod api;
 mod config;
+mod domain;
 mod error;
 
 #[tokio::main]
@@ -20,19 +20,20 @@ async fn main() -> Result<()> {
     println!("STARTING!!");
 
     let app_state = get_app_state().await;
-    let config = app_state.config;
-    let db = app_state.db;
 
-    if !config.is_prod {
-        run_migrations(&db).await?;
+    if !app_state.config.is_prod {
+        run_migrations(&app_state.db).await?;
     }
 
     let routes = Router::new().route("/health_check", get(health_check));
 
-    Server::bind(&config.socket_address)
+    Server::bind(&app_state.config.socket_address)
         .serve(routes.into_make_service())
         .await
         .unwrap();
+
+    let z = domain::user_service::UserService::find(&app_state.db).await?;
+    println!("z: {:?}", z);
 
     Ok(())
 }

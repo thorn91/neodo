@@ -1,10 +1,12 @@
 use entity::user::{Entity as User, Model};
-use sea_orm::{DbConn, DbErr, EntityTrait};
+use sea_orm::{DbConn, EntityTrait};
+
+use crate::error::Error;
 
 pub struct UserService;
 
 impl UserService {
-    pub async fn find(db: &DbConn) -> Result<Vec<Model>, DbErr> {
+    pub async fn find(db: &DbConn) -> Result<Vec<Model>, Error> {
         let users = User::find().all(db).await?;
         Ok(users)
     }
