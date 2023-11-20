@@ -1,7 +1,7 @@
 use axum::{
     response::{Html, IntoResponse},
     routing::get,
-    Json, Router, Server,
+    Json, Router, Server, http::header::SEC_WEBSOCKET_ACCEPT,
 };
 use error::Result;
 #[allow(unused_imports)]
@@ -20,20 +20,20 @@ async fn main() -> Result<()> {
     println!("STARTING!!");
 
     let app_state = get_app_state().await;
+    let socket_address = app_state.config.socket_address;
 
     if !app_state.config.is_prod {
         run_migrations(&app_state.db).await?;
     }
 
-    let routes = Router::new().route("/health_check", get(health_check));
+    let routes = Router::new()
+        .route("/health_check", get(health_check))
+        .with_state(app_state);
 
-    Server::bind(&app_state.config.socket_address)
+    Server::bind(&socket_address)
         .serve(routes.into_make_service())
         .await
         .unwrap();
-
-    let z = domain::user_service::UserService::find(&app_state.db).await?;
-    println!("z: {:?}", z);
 
     Ok(())
 }
