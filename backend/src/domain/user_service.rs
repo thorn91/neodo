@@ -10,7 +10,24 @@ impl UserService {
     }
 }
 
-#[derive(Debug)]
-enum UserServiceError {
-    NotFound,
-}
+// // These methods convert server errors into client errors
+// impl Error {
+//     pub fn client_status_and_error(&self) -> (StatusCode, ClientError) {
+//         match self {
+//             // Auth
+//             Self::AuthFailCtxNotInRequestExt
+//             | Self::AuthFailNoAuthTokenCookie
+//             | Self::AuthFailCtxNotInRequestExt => (StatusCode::FORBIDDEN, ClientError::NO_AUTH),
+
+//             // Model
+//             Self::TicketDeleteFailedIdNotFound { id } => {
+//                 (StatusCode::BAD_REQUEST, ClientError::INVALID_PARAMS)
+//             }
+
+//             _ => (
+//                 StatusCode::INTERNAL_SERVER_ERROR,
+//                 ClientError::SERVICE_ERROR,
+//             ),
+//         }
+//     }
+// }
